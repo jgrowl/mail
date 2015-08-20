@@ -1,0 +1,21 @@
+mail_data:
+  image: busybox
+  volumes:
+  - /var/mail
+  - /etc/mail
+  mem_limit: 128m
+
+mail:
+  image: jgrowl/mail
+  command: supervisord -n -c /etc/supervisor/supervisord.conf
+  volumes_from:
+  - mail_data
+  ports:
+  - "25:25"
+  - "587:587"
+  - "110:110"
+  - "143:143"
+  - "80:80"
+  mem_limit: 1024m
+  env_file: .env
+

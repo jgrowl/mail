@@ -1,0 +1,77 @@
+[supervisord]
+nodaemon=true
+
+[program:mysql]
+#command=/usr/bin/pidproxy /var/run/mysqld/mysqld.pid /usr/sbin/mysqld
+command 	    = /usr/local/bin/run-service.sh mysql
+startsecs 	= 5
+autorestart=true
+
+[program:postfix]
+process_name 	= master
+command 	    = /usr/local/bin/run-service.sh postfix
+directory	    = /etc/postfix
+startsecs 	    = 5
+autorestart 	= true
+
+[program:opendkim]
+command 	    = /usr/local/bin/run-service.sh opendkim
+startsecs 	    = 5
+autorestart 	= true
+
+[program:authdaemon]
+command 	    = /usr/local/bin/run-service.sh courier-authdaemon
+startsecs 	    = 5
+autorestart 	= true
+
+[program:saslauthd]
+command 	    = /usr/local/bin/run-service.sh saslauthd
+startsecs 	    = 5
+autorestart 	= true
+
+[program:spamassassin]
+command 	    = /usr/local/bin/run-service.sh spamassassin
+startsecs 	    = 5
+autorestart 	= true
+
+[program:postgrey]
+command 	    = /usr/local/bin/run-service.sh postgrey
+startsecs 	    = 5
+autorestart 	= true
+
+[program:pop]
+command 	    = /usr/local/bin/run-service.sh courier-pop
+startsecs 	    = 5
+autorestart 	= true
+
+[program:pop_ssl]
+command 	    = /usr/local/bin/run-service.sh courier-pop-ssl
+startsecs 	    = 5
+autorestart 	= true
+
+[program:imap]
+command 	    = /usr/local/bin/run-service.sh courier-imap
+startsecs 	    = 5
+autorestart 	= true
+
+[program:imap_ssl]
+command 	    = /usr/local/bin/run-service.sh courier-imap-ssl
+startsecs 	    = 5
+autorestart 	= true
+
+[program:apache2]
+command 	    = /usr/local/bin/run-service.sh apache2
+startsecs 	    = 5
+autorestart 	= true
+
+[program:rsyslog]
+command 	    = /usr/sbin/rsyslogd -n
+startsecs 	    = 0
+autorestart 	= true
+
+[program:cat]
+process_name	        = cat
+command 	            = cat /dev/maillog
+stdout_logfile 	        = /dev/stdout
+stdout_logfile_maxbytes = 0
+autorestart 	        = true

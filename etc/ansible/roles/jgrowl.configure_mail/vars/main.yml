@@ -1,0 +1,8 @@
+---
+# vars file for jgrowl.configure_mail
+configure_mail_subdomain: "{{ lookup('env','SUBDOMAIN') }}"
+configure_mail_domain: "{{ lookup('env','DOMAIN') }}"
+configure_mail_database_root_password: "{{ lookup('env','DB_ROOT_PASSWORD') }}"
+configure_mail_postfixadmin_setup_password: "{{ lookup('env','POSTFIXADMIN_SETUP_PASSWORD') }}"
+configure_mail_postfixadmin_database_password: "{{ lookup('env','POSTFIXADMIN_DB_PASSWORD') }}"
+

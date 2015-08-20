@@ -1,0 +1,14 @@
+MYSQL_SERVER 127.0.0.1
+MYSQL_USERNAME {{ configure_mail_postfixadmin_database_user }}
+MYSQL_PASSWORD {{ configure_mail_postfixadmin_database_password }}
+MYSQL_DATABASE {{ configure_mail_postfixadmin_database_name }}
+MYSQL_USER_TABLE mailbox
+MYSQL_LOGIN_FIELD username
+MYSQL_NAME_FIELD name
+MYSQL_CRYPT_PWFIELD password
+#MYSQL_CLEAR_PWFIELD     password
+MYSQL_QUOTA_FIELD concat(quota,'S')
+MYSQL_HOME_FIELD '/var/mail'
+MYSQL_MAILDIR_FIELD maildir
+MYSQL_UID_FIELD '5000'
+MYSQL_GID_FIELD '5000'

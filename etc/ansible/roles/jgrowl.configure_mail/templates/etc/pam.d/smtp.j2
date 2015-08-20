@@ -1,0 +1,2 @@
+auth    required   pam_mysql.so user={{ configure_mail_postfixadmin_database_user }} passwd={{ configure_mail_postfixadmin_database_password }} host=127.0.0.1 db={{ configure_mail_postfixadmin_database_name }} table=mailbox usercolumn=username passwdcolumn=password crypt=1 md5=1
+account sufficient pam_mysql.so user={{ configure_mail_postfixadmin_database_user }} passwd={{ configure_mail_postfixadmin_database_password }} host=127.0.0.1 db={{ configure_mail_postfixadmin_database_name }} table=mailbox usercolumn=username passwdcolumn=password crypt=1 md5=1

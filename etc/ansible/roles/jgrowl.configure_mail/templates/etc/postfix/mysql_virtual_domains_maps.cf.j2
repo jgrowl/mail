@@ -1,0 +1,8 @@
+user = {{ configure_mail_postfixadmin_database_user }}
+password = {{ configure_mail_postfixadmin_database_password }}
+hosts = 127.0.0.1
+dbname = {{ configure_mail_postfixadmin_database_name }}
+table = domain
+select_field = domain
+where_field = domain
+#additional_conditions = and backupmx = '0' and active = '1'

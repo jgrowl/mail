@@ -1,0 +1,8 @@
+user = {{ configure_mail_postfixadmin_database_user }}
+password = {{ configure_mail_postfixadmin_database_password }}
+hosts = 127.0.0.1
+dbname = {{ configure_mail_postfixadmin_database_name }}
+table = mailbox
+select_field = maildir
+where_field = username
+#additional_conditions = and active = '1'
