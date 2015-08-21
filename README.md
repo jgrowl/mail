@@ -1,25 +1,22 @@
 # Setup instructions 
 
 
-## Set your access token
+## Obtain a docker host and source docker environment variables
 
-`export DO_ACCESS_TOKEN=<API TOKEN>`
-    
-## Create a docker machine
+### For example, on DigitalOcean:
 
-`docker-machine create --driver digitalocean --digitalocean-access-token $DO_ACCESS_TOKEN mail`
+    export DO_ACCESS_TOKEN=<API TOKEN>
+    docker-machine create --driver digitalocean --digitalocean-access-token $DO_ACCESS_TOKEN mail
+    eval "$(docker-machine env mail)"
     
-## Set your new docker machine's environment variables
     
-`eval "$(docker-machine env mail)"`
-    
-## Copy the .env template and set your variables 
+## Copy the .env template and edit with your own variables 
 
 `cp .env.template .env`
     
 ## Bring up your new mail server
 
-`docker-compose -p rowlandsio up -d mail`
+`docker-compose -p examplecom up -d mail`
     
 ## Setup postfixadmin
 
@@ -35,7 +32,7 @@
     
 # Debug any issues
     
-`docker exec -it rowlandsio_mail_1 bash`
+`docker exec -it examplecom_mail_1 bash`
 
 # Development instructions
 
