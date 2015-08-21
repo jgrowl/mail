@@ -1,8 +1,10 @@
 mail_data:
   image: busybox
   volumes:
-  - /var/mail
-  - /etc/mail
+  - /var/mail           # Mail
+  - /etc/mail           # DKIM Key
+  - /etc/courier        # POP & IMAP Keys
+  - /var/www/html/data  # Rainloop data
   mem_limit: 128m
 
 mail:

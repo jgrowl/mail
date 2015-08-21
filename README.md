@@ -16,7 +16,7 @@
     
 ## Bring up your new mail server
 
-`docker-compose -p examplecom up -d mail`
+`docker-compose -p examplecom up -d`
     
 ## Setup postfixadmin
 
@@ -39,8 +39,6 @@
 ## Build the image
 
 `docker build -t jgrowl/mail .`
-    
-
 
 # Notes
 

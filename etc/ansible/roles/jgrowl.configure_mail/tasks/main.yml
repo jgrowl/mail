@@ -40,9 +40,9 @@
 
 #RUN sed -i -e 's@^mail.*@@g' /etc/rsyslog.conf
 
-# Generate these:
-#/usr/lib/courier/pop3d.pem
-#/usr/lib/courier/imapd.pem
+- command: mkpop3dcert && mv /usr/lib/courier/share/pop3d.pem . chdir=/etc/courier creates=/etc/courier/pop3d.pem
+
+- command: mkimapdcert && mv /usr/lib/courier/share/imapd.pem chdir=/etc/courier creates=/etc/courier/imapd.pem
 
 - name: Create global my.cnf
   template: src=etc/mysql/my.cnf.j2 dest=/etc/mysql/my.cnf
