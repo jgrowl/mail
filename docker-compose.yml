@@ -19,5 +19,5 @@ mail:
   - "143:143"
   - "80:80"
   mem_limit: 1024m
-  env_file: .env
+  env_file: env
 

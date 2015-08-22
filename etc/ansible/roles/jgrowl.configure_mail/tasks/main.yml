@@ -40,21 +40,12 @@
 
 #RUN sed -i -e 's@^mail.*@@g' /etc/rsyslog.conf
 
-- command: mkpop3dcert && mv /usr/lib/courier/share/pop3d.pem . chdir=/etc/courier creates=/etc/courier/pop3d.pem
+- command: rm -Rf /usr/lib/courier/pop3d.pem && mkpop3dcert && mv /usr/lib/courier/share/pop3d.pem /usr/lib/courier/pop3d.pem creates=/usr/lib/courier/pop3d.pem
 
-- command: mkimapdcert && mv /usr/lib/courier/share/imapd.pem chdir=/etc/courier creates=/etc/courier/imapd.pem
-
-- name: Create global my.cnf
-  template: src=etc/mysql/my.cnf.j2 dest=/etc/mysql/my.cnf
-
-- name: Create local my.cnf for root user
-  template: src=root/.my.cnf.j2 dest=/root/.my.cnf owner=root mode=0600
+- command: rm -Rf /usr/lib/courier/imapd.pem && mkimapdcert && mv /usr/lib/courier/share/imapd.pem /usr/lib/courier/imapd.pem creates=/usr/lib/courier/imapd.pem
 
 - name: Restart the MySQL service
   action: service name=mysql state=restarted
-
-- name: Add postfixadmin user and allow access to databases
-  mysql_user: name={{ configure_mail_postfixadmin_database_user }} password={{ configure_mail_postfixadmin_database_password }} host="localhost" priv="{{ configure_mail_postfixadmin_database_name }}.*:ALL,GRANT" state=present
 
 - name: Set root password
   mysql_user: name=root password={{ configure_mail_database_root_password }} host="{{ item }}" priv=*.*:ALL,GRANT state=present
@@ -63,6 +54,15 @@
   - ::1
   - localhost
 #  - "{{ansible_hostname}}"
+
+- name: Create global my.cnf
+  template: src=etc/mysql/my.cnf.j2 dest=/etc/mysql/my.cnf
+
+- name: Create local my.cnf for root user
+  template: src=root/.my.cnf.j2 dest=/root/.my.cnf owner=root mode=0600
+
+- name: Add postfixadmin user and allow access to databases
+  mysql_user: name={{ configure_mail_postfixadmin_database_user }} password={{ configure_mail_postfixadmin_database_password }} host="localhost" priv="{{ configure_mail_postfixadmin_database_name }}.*:ALL,GRANT" state=present
 
 - name: Enable override configurations
   command: a2enconf servername

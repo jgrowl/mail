@@ -29,6 +29,11 @@
 ## Setup your DNS records
 
 ![DNS Records](images/mail-dns-records.png "dns-records")
+
+### Obtain DKIM key from container
+
+`docker exec examplecom_mail_1 cat /etc/mail/mail.txt`
+
     
 # Debug any issues
     

@@ -11,7 +11,7 @@ VOLUME ["/var/mail/"]
 
 RUN echo mail > /etc/hostname;
 
-RUN apt-get update
+RUN apt-get update -y
 
 # Set noninteractive mode for apt-get
 ENV DEBIAN_FRONTEND noninteractive
@@ -19,8 +19,8 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN echo postfix postfix/main_mailer_type string Internet site | debconf-set-selections;\
   echo postfix postfix/mailname string mail.example.com | debconf-set-selections
 
-RUN echo "mysql-server mysql-server/root_password password rootpassword" | debconf-set-selections;\
-  echo "mysql-server mysql-server/root_password_again password rootpassword" | debconf-set-selections
+#RUN echo "mysql-server mysql-server/root_password password rootpassword" | debconf-set-selections;\
+#  echo "mysql-server mysql-server/root_password_again password rootpassword" | debconf-set-selections
 
 RUN apt-get install -y postfix mysql-server mysql-client postfix-mysql courier-authdaemon courier-pop courier-pop-ssl \
     courier-imap courier-imap-ssl libsasl2-2 sasl2-bin libsasl2-modules libsasl2-2 libsasl2-modules libpam-mysql \
@@ -39,7 +39,7 @@ RUN usermod -G sasl postfix
 
 RUN php5enmod imap
 
-RUN echo "postfixadmin postfixadmin/mysql/admin-pass password rootpassword" | debconf-set-selections
+#RUN echo "postfixadmin postfixadmin/mysql/admin-pass password rootpassword" | debconf-set-selections
 
 ADD http://iweb.dl.sourceforge.net/project/postfixadmin/postfixadmin/postfixadmin-2.92/postfixadmin_2.92-1_all.deb /tmp/postfixadmin.deb
 RUN service mysql start && sleep 5 && dpkg -i /tmp/postfixadmin.deb
