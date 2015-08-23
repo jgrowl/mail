@@ -39,7 +39,7 @@ LogWhy                  Yes
 
 Domain    {{ configure_mail_dkim_domain }}
 KeyFile    /etc/mail/dkim.key
-Selector    dkim
+Selector    {{ configure_mail_subdomain }}
 Socket                  inet:8891@localhost
 
 
