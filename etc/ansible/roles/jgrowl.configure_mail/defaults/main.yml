@@ -8,7 +8,7 @@ configure_mail_full_domain: "{{ configure_mail_subdomain }}.{{ configure_mail_do
 configure_mail_apache_server_name: "{{ configure_mail_full_domain }}"
 configure_mail_myhostname: "{{ configure_mail_full_domain }}"
 configure_mail_mydestination: "{{ configure_mail_full_domain }}"
-configure_mail_mynetworks: "{{ configure_mail_domain }},{{ configure_mail_full_domain }},172.0.0.0/8,localhost"
+configure_mail_mynetworks: "{{ configure_mail_domain }},{{ configure_mail_full_domain }},172.0.0.0/8,localhost,172.17.42.1"
 #      127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128
 configure_mail_relayhost:
 configure_mail_dkim_domain: "{{ configure_mail_domain }}"
@@ -23,4 +23,15 @@ configure_mail_postfixadmin_setup_password: setuppassword
 configure_mail_postfixadmin_database_name: postfixadmin
 configure_mail_postfixadmin_database_user: postfixadmin
 configure_mail_postfixadmin_database_password: postfixpassword
+
+configure_mail_smtpd_tls_cert_file: /etc/ssl/certs/smtpd.crt
+configure_mail_smtpd_tls_key_file: /etc/ssl/private/smtpd.key
+configure_mail_smtpd_tls_CAfile: /etc/ssl/certs/cacert.pem
+
+configure_mail_c: US
+configure_mail_st: Denial
+configure_mail_l: Springfield
+configure_mail_o: Dis
+configure_mail_cn: www.example.com
+
 

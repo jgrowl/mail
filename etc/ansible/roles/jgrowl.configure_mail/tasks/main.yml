@@ -10,6 +10,8 @@
 - template: src=etc/postfix/sasl/smtpd.conf.j2 dest=/etc/postfix/sasl/smtpd.conf owner=root group=root mode=0600
 
 - template: src=etc/postfix/main.cf.j2 dest=/etc/postfix/main.cf owner=root group=root mode=0640
+- template: src=etc/postfix/master.cf.j2 dest=/etc/postfix/master.cf owner=root group=root mode=0640
+
 - template: src=etc/postfix/mysql_relay_domains_maps.cf.j2 dest=/etc/postfix/mysql_relay_domains_maps.cf owner=root group=postfix mode=0640
 - template: src=etc/postfix/mysql_virtual_alias_maps.cf.j2 dest=/etc/postfix/mysql_virtual_alias_maps.cf owner=root group=postfix mode=0640
 - template: src=etc/postfix/mysql_virtual_domains_maps.cf.j2 dest=/etc/postfix/mysql_virtual_domains_maps.cf owner=root group=postfix mode=0640
@@ -20,6 +22,14 @@
 - template: src=etc/supervisor/supervisord.conf.j2 dest=/etc/supervisor/supervisord.conf owner=root group=root mode=0600
 - template: src=etc/opendkim.conf.j2 dest=/etc/opendkim.conf owner=root group=root mode=0600
 
+- template: src=etc/courier/imapd.cnf.j2 dest=/etc/courier/imapd.cnf
+- template: src=etc/courier/imapd.j2 dest=/etc/courier/imapd
+- template: src=etc/courier/imapd-ssl.j2 dest=/etc/courier/imapd-ssl
+
+- template: src=etc/courier/pop3d.cnf.j2 dest=/etc/courier/pop3d.cnf
+- template: src=etc/courier/pop3d.j2 dest=/etc/courier/pop3d
+- template: src=etc/courier/pop3d-ssl.j2 dest=/etc/courier/pop3d-ssl
+
 - copy: src=generate-setup-password-hash.php dest=/usr/local/bin/generate-setup-password-hash.php mode=0755
 
 - shell: /usr/local/bin/generate-setup-password-hash.php {{ configure_mail_postfixadmin_setup_password }}
@@ -27,12 +37,11 @@
 
 - template: src=usr/share/postfixadmin/config.inc.php.j2 dest=/usr/share/postfixadmin/config.inc.php owner=root group=root mode=0644
 
-- command: opendkim-genkey -t -s {{ configure_mail_dkim_genkey_subdomain }} -d {{ configure_mail_dkim_genkey_domain }} && mv mail.private dkim.key creates=/etc/mail/dkim.key chdir=/etc/mail
+- command: opendkim-genkey -t -s {{ configure_mail_dkim_genkey_subdomain }} -d {{ configure_mail_dkim_genkey_domain }} creates=/etc/mail/{{ configure_mail_dkim_genkey_subdomain }}.txt chdir=/etc/mail
 
-- shell: cat /etc/mail/mail.txt
-  register: dkim_txt_key
+- command: mv {{ configure_mail_dkim_genkey_subdomain }}.private dkim.key creates=/etc/mail/dkim.key chdir=/etc/mail
 
-- debug: var=dkim_txt_key
+- command: chown -R www-data:www-data /var/www/html/data
 
 - file: path=/var/mail state=directory recurse=yes mode=0755 owner=vmail group=vmail
 
@@ -40,9 +49,20 @@
 
 #RUN sed -i -e 's@^mail.*@@g' /etc/rsyslog.conf
 
-- command: rm -Rf /usr/lib/courier/pop3d.pem && mkpop3dcert && mv /usr/lib/courier/share/pop3d.pem /usr/lib/courier/pop3d.pem creates=/usr/lib/courier/pop3d.pem
+- command: mkpop3dcert chdir=/usr/lib/courier creates=/usr/lib/courier/pop3d.pem
 
-- command: rm -Rf /usr/lib/courier/imapd.pem && mkimapdcert && mv /usr/lib/courier/share/imapd.pem /usr/lib/courier/imapd.pem creates=/usr/lib/courier/imapd.pem
+- command: mkimapdcert chdir=/usr/lib/courier creates=/usr/lib/courier/imapd.pem
+
+# http://superuser.com/a/226229
+# The -nodes flag signals to not encrypt the key, thus you do not need a password. You could also use the -passout arg flag. See PASS PHRASE ARGUMENTS in the openssl(1) man page for how to format the arg.
+
+#- command: openssl genrsa 1024 > smtpd.key chdir=/etc/ssl/private creates=/etc/ssl/private/smtpd.key
+- command: openssl req -new -newkey rsa:4096 -days 365 -nodes -x509 -subj "/C={{configure_mail_c}}/ST={{configure_mail_st}}/L={{configure_mail_l}}/O={{configure_mail_o}}/CN={{configure_mail_cn}}" -keyout /etc/ssl/private/smtpd.key -out /etc/ssl/certs/smtpd.crt creates=/etc/ssl/private/smtpd.key
+- file: path=/etc/ssl/private/smtpd.key owner=root group=root mode=0600
+
+#- command: openssl req -new -key /etc/ssl/private/smtpd.key -x509 -days 3650 -out smtpd.crt chdir=/etc/ssl/certs creates=/etc/ssl/certs/smtpd.crt
+- command: openssl req -new -x509 -nodes -subj "/C={{configure_mail_c}}/ST={{configure_mail_st}}/L={{configure_mail_l}}/O={{configure_mail_o}}/CN={{configure_mail_cn}}"  -extensions v3_ca -keyout cakey.pem -out cacert.pem -days 3650 chdir=/etc/ssl/private creates=/etc/ssl/private/cakey.pem
+
 
 - name: Restart the MySQL service
   action: service name=mysql state=restarted

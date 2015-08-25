@@ -1,6 +1,5 @@
 # Setup instructions 
 
-
 ## Obtain a docker host and source docker environment variables
 
 ### For example, on DigitalOcean:
@@ -9,10 +8,9 @@
     docker-machine create --driver digitalocean --digitalocean-access-token $DO_ACCESS_TOKEN mail
     eval "$(docker-machine env mail)"
     
-    
-## Copy the .env template and edit with your own variables 
+## Copy the env template and edit with your own variables 
 
-`cp .env.template .env`
+`cp env.template env`
     
 ## Bring up your new mail server
 
@@ -34,7 +32,6 @@
 
 `docker exec examplecom_mail_1 cat /etc/mail/mail.txt`
 
-    
 # Debug any issues
     
 `docker exec -it examplecom_mail_1 bash`

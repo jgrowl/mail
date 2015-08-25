@@ -5,7 +5,7 @@
 FROM phusion/baseimage:0.9.17
 MAINTAINER Jonathan Rowlands <jonrowlands83@gmail.com>
 
-EXPOSE 25 587 80 110 143
+EXPOSE 25 587 80 110 143 993 465
 
 VOLUME ["/var/mail/"]
 
@@ -18,9 +18,6 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN echo postfix postfix/main_mailer_type string Internet site | debconf-set-selections;\
   echo postfix postfix/mailname string mail.example.com | debconf-set-selections
-
-#RUN echo "mysql-server mysql-server/root_password password rootpassword" | debconf-set-selections;\
-#  echo "mysql-server mysql-server/root_password_again password rootpassword" | debconf-set-selections
 
 RUN apt-get install -y postfix mysql-server mysql-client postfix-mysql courier-authdaemon courier-pop courier-pop-ssl \
     courier-imap courier-imap-ssl libsasl2-2 sasl2-bin libsasl2-modules libsasl2-2 libsasl2-modules libpam-mysql \
@@ -39,8 +36,6 @@ RUN usermod -G sasl postfix
 
 RUN php5enmod imap
 
-#RUN echo "postfixadmin postfixadmin/mysql/admin-pass password rootpassword" | debconf-set-selections
-
 ADD http://iweb.dl.sourceforge.net/project/postfixadmin/postfixadmin/postfixadmin-2.92/postfixadmin_2.92-1_all.deb /tmp/postfixadmin.deb
 RUN service mysql start && sleep 5 && dpkg -i /tmp/postfixadmin.deb
 RUN apt-get install -f
@@ -51,6 +46,7 @@ ADD etc/ansible/roles/jgrowl.configure_mail /etc/ansible/roles/jgrowl.configure_
 WORKDIR "/var/www/html"
 RUN rm /var/www/html/index.html
 RUN curl -s http://repository.rainloop.net/installer.php | php
+#RUN chown -R www-data:www-data /var/www/html/data/
 WORKDIR "/"
 
 # spamassassin
@@ -63,8 +59,8 @@ RUN chown spamd:spamd /var/log/spamassassin
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Remove the certs so they can be generated
-RUN rm -f /etc/courier/pop3d.pem
-RUN rm -f /etc/courier/imapd.pem
+#RUN rm -f /etc/courier/pop3d.pem
+#RUN rm -f /etc/courier/imapd.pem
 
 ADD entry.sh /usr/local/bin/entry.sh
 ADD run-service.sh /usr/local/bin/run-service.sh

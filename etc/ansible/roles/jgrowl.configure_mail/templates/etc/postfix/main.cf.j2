@@ -18,11 +18,20 @@ append_dot_mydomain = no
 readme_directory = no
 
 # TLS parameters
-smtpd_tls_cert_file=/etc/ssl/certs/ssl-cert-snakeoil.pem
-smtpd_tls_key_file=/etc/ssl/private/ssl-cert-snakeoil.key
+
+smtpd_tls_cert_file={{ configure_mail_smtpd_tls_cert_file }}
+smtpd_tls_key_file={{ configure_mail_smtpd_tls_key_file }}
+smtpd_tls_CAfile={{ configure_mail_smtpd_tls_CAfile }}
 smtpd_use_tls=yes
 smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
 smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+smtpd_tls_loglevel = 1
+smtpd_tls_received_header = yes
+smtpd_tls_session_cache_timeout = 3600s
+tls_random_source = dev:/dev/urandom
+smtp_tls_security_level = may
+smtpd_tls_security_level = may
+smtp_tls_note_starttls_offer = yes
 
 # See /usr/share/doc/postfix/TLS_README.gz in the postfix-doc package for
 # information on enabling SSL in the smtp client.
@@ -36,7 +45,7 @@ mydestination = {{ configure_mail_mydestination }}
 
 #Remains blank unless you are going to use your ISP's SMTP server mail sending out mails.
 #In which case it would be set to the host name of the ISP's SMTP server
-relayhost = {{ configure_mail_relayhost }}
+relayhost =
 
 mynetworks = {{ configure_mail_mynetworks }}
 mailbox_size_limit = 0

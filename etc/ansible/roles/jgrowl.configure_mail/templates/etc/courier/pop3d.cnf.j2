@@ -1,0 +1,21 @@
+#RANDFILE = /usr/lib/courier/pop3d.rand
+
+[ req ]
+default_bits = 4096
+encrypt_key = yes
+distinguished_name = req_dn
+x509_extensions = cert_type
+prompt = no
+
+[ req_dn ]
+C=US
+ST=NY
+L=New York
+O=Courier Mail Server
+OU=Automatically-generated POP3 SSL key
+CN={{ configure_mail_dkim_genkey_domain }}
+emailAddress=postmaster@{{ configure_mail_dkim_genkey_domain }}
+
+
+[ cert_type ]
+nsCertType = server
